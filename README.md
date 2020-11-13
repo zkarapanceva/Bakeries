@@ -42,3 +42,25 @@
 дополнителни прашање од страна на корисникот.
 17. Апликацијата ќе биде достапна од било кое место кога корисникот е поврзан на Интернет.
 18. Апликацијата ќе работи согласно законските регулативи.
+
+### [Креирање на база на податоци и филтрирање](https://github.com/zkarapanceva/Bakeries/blob/main/2.SRS%20na%20proektot.pdf)
+
+1.	echo "create database bakeries;"|mysql -uroot -p
+      •	креирање на нова MySQL база на податоци
+
+2.	osmfilter macedonia-latest.osm --keep="shop=bakery" | osmconvert - --all-to-nodes --csv="name addr:city addr:street" --csv-headline --csv-separator="," -o="bakeries.csv"
+      •	филтрирање на симнатите податоци од OpenStreetMap со издвојување на пекарите од системот и притоа креирање на csv датотека со информациите за име, адреса-град и адреса-улица на записите за пекарите
+
+3.	echo "SET GLOBAL local_infile=1;USE bakeries ;CREATE TABLE bakeries ( name VARCHAR(255), addr_city VARCHAR(255) NOT NULL, addr_street VARCHAR(255) );"|mysql -uroot -p
+      •	креирање на табела со три колони (име, град и улица) која ќе ја пополниме со информациите од csv документот
+
+4.	echo "USE bakeries ;LOAD DATA LOCAL INFILE '/Users/mac/Desktop/proekt/bakeries.csv' INTO TABLE bakeries FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 ROWS (name, addr_city, addr_street);" | mysql --local-infile=1 -u root -p
+      •	пополнување на базата со информациите од csv документот при што се игнорира првиот ред и се определува знакот за одделување на податоците
+
+5.	echo "USE bakeries; delete from bakeries where addr_city='';"|mysql -uroot -p
+      •	со цел добивање на целосно пополнета база со информациите кои ни се потребни, ги одделуваме само оние редови (пекари) за кои имаме достапни информации за нивната локација – град и улица
+      
+### [Користени податоци]()
+
+https://www.dropbox.com/s/t9x8wrkuy1xapnh/4.%20Podatoci.zip?dl=0
+
